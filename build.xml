@@ -2,6 +2,7 @@
   <property name="main.build.dir" value="build/main"/>
   <property name="main.src.dir" value="src/main/java"/>
   <property name="test.build.dir" value="build/test"/>
+  <property name="junit.report.dir" value="build/junitreport"/>
   <property name="test.src.dir" value="src/test/java"/>
 
   <path id="classpath.test">
@@ -23,15 +24,20 @@
   </target>
 
   <target name="test" depends="test-compile">
+    <mkdir dir="${junit.report.dir}" />
     <junit printsummary="on" haltonfailure="yes" fork="true">
         <classpath>
           <path refid="classpath.test"/>
           <pathelement location="${test.build.dir}"/>
         </classpath>
         <formatter type="brief" usefile="false" />
-        <batchtest>
+        <batchtest fork="yes" todir="${junit.report.dir}">
             <fileset dir="${test.src.dir}" includes="**/*Test.java" />
         </batchtest>
     </junit>
+    <junitreport todir="${junit.report.dir}">
+        <fileset dir="${junit.report.dir}" includes="TEST-*.xml"/>
+        <report todir="${junit.report.dir}"/>
+    </junitreport>
   </target>
 </project>
